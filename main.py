@@ -13,13 +13,11 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("user_prompt", help="Specify the prompt.")
-    parser.add_argument("--verbose",help="Enable verbosity", action="store_true")
+    parser.add_argument("--verbose","-v",help="Enable verbosity", action="store_true")
     args = parser.parse_args()
 
-    user_prompt = args.user_prompt
-
     messages = [
-    types.Content(role="user", parts=[types.Part(text=user_prompt)])
+    types.Content(role="user", parts=[types.Part(text= args.user_prompt)])
     ]
     response = client.models.generate_content(
         model='gemini-2.0-flash-001',
@@ -29,7 +27,7 @@ def main():
     print(response.text)
 
     if args.verbose:
-        print("User prompt:", user_prompt)
+        print("User prompt:", args.user_prompt)
         print("Prompt tokens:", response.usage_metadata.prompt_token_count)
         print("Response tokens:", response.usage_metadata.candidates_token_count)
 
