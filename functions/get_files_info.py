@@ -12,7 +12,10 @@ def get_files_info(working_directory, directory=None):
 
     if not os.path.isdir(joined_paths):
         return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
-
+    
+    if os.path.commonpath([abs_path,joined_paths]) != abs_path:
+        return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
+    
     dir_items = os.listdir(joined_paths)
     dir_info = []
     for item in dir_items:
@@ -25,7 +28,4 @@ def get_files_info(working_directory, directory=None):
     
     result = "\n".join(sorted(dir_info))
 
-    print(result)
     return result
-
-get_files_info("calculator", "llll")
