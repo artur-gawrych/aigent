@@ -2,4 +2,4 @@ echo "Running Function Tests"
 echo "----------------------"
 echo ""
 
-python3 functions/functions_tests.py
+python3 tests.py
