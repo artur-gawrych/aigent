@@ -18,14 +18,17 @@ def get_files_info(working_directory, directory=None):
     
     dir_items = os.listdir(joined_paths)
     dir_info = []
-    for item in dir_items:
-        item_info = ""
-        item_path = os.path.join(joined_paths, item)
-        file_size = os.path.getsize(item_path)
-        is_dir = os.path.isdir(item_path)
-        item_info = f"- {item}: file_size={file_size} bytes, is_dir={is_dir}"
-        dir_info.append(item_info)
-    
-    result = "\n".join(sorted(dir_info))
+    try:
+        for item in dir_items:
+            item_info = ""
+            item_path = os.path.join(joined_paths, item)
+            file_size = os.path.getsize(item_path)
+            is_dir = os.path.isdir(item_path)
+            item_info = f"- {item}: file_size={file_size} bytes, is_dir={is_dir}"
+            dir_info.append(item_info)
 
-    return result
+        result = "\n".join(sorted(dir_info))
+
+        return result
+    except Exception as e:
+        return f"Error: Unable to get files info: {e}"
