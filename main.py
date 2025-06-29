@@ -8,6 +8,7 @@ from functions.get_files_info import get_files_info
 
 from prompts import system_prompt
 from call_function import available_functions
+from functions.call_functions import call_function
 
 def main():
         
@@ -35,8 +36,12 @@ def main():
     )
 
     if response.function_calls:
-        for function in response.function_calls:
-            print(f"Calling function: {function.name}({function.args})")
+        for function_call_part in response.function_calls:
+            function_response_content  = call_function(function_call_part, verbose=args.verbose)
+            if not isinstance(function_response_content, types.Content):
+                raise RuntimeError("FATAL EXCEPTION: Missing function response structure.")
+            elif args.verbose:
+                print(f"-> {function_response_content.parts[0].function_response.response}")
     else:
         print(response.text)
 

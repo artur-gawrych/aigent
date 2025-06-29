@@ -1,9 +1,9 @@
 import os
 from google.genai import types
 
-def write_file(working_path, file_path, content):
+def write_file(working_directory, file_path, content):
 
-    abs_work_path = os.path.abspath(working_path)
+    abs_work_path = os.path.abspath(working_directory)
     abs_file_path = os.path.join(abs_work_path, file_path)
 
     if os.path.commonpath([abs_work_path, abs_file_path]) != abs_work_path:
