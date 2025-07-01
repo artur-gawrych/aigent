@@ -37,7 +37,7 @@ def main():
         )
         response_candidates = response.candidates
         for candidate in response_candidates:
-            messages.append(candidate)
+            messages.append(candidate.content)
 
         if response.function_calls:
             for function_call_part in response.function_calls:
