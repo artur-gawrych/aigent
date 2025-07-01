@@ -26,24 +26,29 @@ def main():
     messages = [
     types.Content(role="user", parts=[types.Part(text=user_prompt)])
     ]
-    
-    response = client.models.generate_content(
-        model='gemini-2.0-flash-001',
-        contents=messages,
-        config=types.GenerateContentConfig(
-            tools=[available_functions],
-            system_instruction=system_prompt)
-    )
 
-    if response.function_calls:
-        for function_call_part in response.function_calls:
-            function_response_content  = call_function(function_call_part, verbose=args.verbose)
-            if not isinstance(function_response_content, types.Content):
-                raise RuntimeError("FATAL EXCEPTION: Missing function response structure.")
-            elif args.verbose:
-                print(f"-> {function_response_content.parts[0].function_response.response}")
-    else:
-        print(response.text)
+    for n in range(1,20):
+        response = client.models.generate_content(
+            model='gemini-2.0-flash-001',
+            contents=messages,
+            config=types.GenerateContentConfig(
+                tools=[available_functions],
+                system_instruction=system_prompt)
+        )
+        response_candidates = response.candidates
+        for candidate in response_candidates:
+            messages.append(candidate)
+
+        if response.function_calls:
+            for function_call_part in response.function_calls:
+                function_response_content  = call_function(function_call_part, verbose=args.verbose)
+                messages.append(function_response_content)
+                if not isinstance(function_response_content, types.Content):
+                    raise RuntimeError("FATAL EXCEPTION: Missing function response structure.")
+                elif args.verbose:
+                    print(f"-> {function_response_content.parts[0].function_response.response}")
+        else:
+            print(response.text)
 
     if args.verbose:
         print("User prompt:", user_prompt)
